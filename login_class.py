@@ -10,18 +10,21 @@ class Identity:
         # check that uri is a type string
         if not isinstance(uri, str):
             raise TypeError("uri must be a string")
-        # regex to get everything before :
-        self.scheme = re.search(r'^(.*):', uri).group(1)
-        # regex to get everything after // and before ?
-        self.path = re.search(r'(?<=//)(.*?)(?=\?)', uri).group(1)
-        # regex to get everything after ? until the end of the string or until &
-        self.parameter = re.search(r'(?<=\?)(.*?)(?=&|$)', uri).group(1)
-        # if statment to see if there is a & in the uri
-        if '&' in uri:
-            # regex to get everything after & until =
-            self.query = re.search(r'(?<=&)(.*?)(?==)', uri).group(1)
-            # regex to get everything after documentid= or paymentnumber=
-            self.query_value = re.search(r'(?<=\=)[^&]*$', uri).group(0)
+        try:
+            # regex to get everything before :
+            self.scheme = re.search(r'^(.*):', uri).group(1)
+            # regex to get everything after // and before ?
+            self.path = re.search(r'(?<=//)(.*?)(?=\?)', uri).group(1)
+            # regex to get everything after ? until the end of the string or until &
+            self.parameter = re.search(r'(?<=\?)(.*?)(?=&|$)', uri).group(1)
+            # if statment to see if there is a & in the uri
+            if '&' in uri:
+                # regex to get everything after & until =
+                self.query = re.search(r'(?<=&)(.*?)(?==)', uri).group(1)
+                # regex to get everything after documentid= or paymentnumber=
+                self.query_value = re.search(r'(?<=\=)[^&]*$', uri).group(0)
+        except:
+            raise Exception("URI is not valid")
 
     def check_scheme(self):
         if self.scheme == 'visma-identity':
