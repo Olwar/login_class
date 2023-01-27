@@ -8,7 +8,7 @@ I had to write a class for the identity app to help other parts of the app to kn
 How to parse the uri was the biggest challenge for me. I ended up using regular expressions (regex) to do this. I took a while to find the correct regex to divide the uri into scheme, path and parameters. After that it was pretty straightforward.  
 
 ##### How could I further improve my implementation:  
-I could add more tests, e.g. the code would crash in case the uri is completely wrong e.g. "not even an uri". But I would have to restructure the code if I wanted to add that. I could make the class maybe a bit cleaner code-wise. Maybe someone would have some trouble understanding it even though I believe I added decent comments. The names of the variables could be slightly better.
+I could add more tests. I could make the class maybe a bit cleaner code-wise. Maybe someone would have some trouble understanding it even though I believe I added decent comments. The names of the variables could be slightly better.
 
 ##### Compromises I had to make:  
 Maybe somebody could see using Python for this a compromise. Javascript may be a more suitable or natural choice. But Python is my strongest language so that's why I used that.
