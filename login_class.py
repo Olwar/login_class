@@ -7,6 +7,9 @@ import re
 class Identity:
 
     def __init__(self, uri):
+        # check that uri is a type string
+        if not isinstance(uri, str):
+            raise TypeError("uri must be a string")
         # regex to get everything before :
         self.scheme = re.search(r'^(.*):', uri).group(1)
         # regex to get everything after // and before ?
@@ -31,7 +34,8 @@ class Identity:
             pass
         else:
             return "Wrong path"
-        
+    
+    # check all the parameters for types and values
     def check_parameter(self):
         return_dict = {}
         if self.path == "login":
@@ -40,6 +44,8 @@ class Identity:
         elif self.path == "confirm":
             if self.parameter == "source=netvisor":
                 if self.query == "paymentnumber":
+                    if not self.query_value.isdigit():
+                        return "Wrong parameter"
                     # regex to separate get parameter after =
                     source_value = re.search(r'(?<==)(.*)', self.parameter).group(1)
                     return_dict["source"] = source_value
@@ -56,7 +62,8 @@ class Identity:
             return "Wrong parameter"
         return return_dict
 
-    def identity_check(self):
+    # return error messages or return path and parameters
+    def uri_check(self):
         if self.check_scheme() == "Wrong scheme":
             return "Wrong scheme"
         elif self.check_path() == "Wrong path":
@@ -66,11 +73,12 @@ class Identity:
             return "Wrong parameter"
         else:
             return self.path, res_dict        
-    
+
+# class to use the Identity class
 class Client:
     def __init__(self, uri):
         self.identity = Identity(uri)
-        self.identity.identity_check()
+        self.identity.uri_check()
 
     def get_scheme(self):
         return self.identity.scheme
@@ -82,29 +90,4 @@ class Client:
         return self.identity.parameter
     
     def get_all(self):
-        return self.identity.identity_check()
-
-
-def test_main():
-    right_uri_list = ["visma-identity://login?source=severa", "visma-identity://sign?source=vismasign&documentid=105ab44", "visma-identity://confirm?source=netvisor&paymentnumber=102226"]
-    for uri in right_uri_list:
-        print(uri)
-        client = Client(uri)
-        print("scheme:", client.get_scheme())
-        print("path:", client.get_path())
-        print("parameters:", client.get_parameter())
-        print("all:", client.get_all())
-        print("\n")
-
-    wrong_uri_list = ["WRONG-IDENTITY://login?source=severa", "visma-identity://MACGYVER?source=vismasign&documentid=105ab44", "visma-identity://confirm?source=netvisor&paymentnumber=NOT-A-NUMBER"]
-    for uri in wrong_uri_list:
-        print(uri)
-        client = Client(uri)
-        print("scheme:", client.get_scheme())
-        print("path:", client.get_path())
-        print("parameters:", client.get_parameter())
-        print("all:", client.get_all())
-        print("\n")
-
-if __name__ == "__main__":
-    test_main()
+        return self.identity.uri_check()
