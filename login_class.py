@@ -21,7 +21,7 @@ class Identity:
             # regex to get everything after & until =
             self.query = re.search(r'(?<=&)(.*?)(?==)', uri).group(1)
             # regex to get everything after documentid= or paymentnumber=
-            self.query_value = re.search(r'(?<=\=)[^&]*$', uri).group()
+            self.query_value = re.search(r'(?<=\=)[^&]*$', uri).group(0)
 
     def check_scheme(self):
         if self.scheme == 'visma-identity':
